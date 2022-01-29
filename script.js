@@ -2,6 +2,9 @@ const transactionsUl = document.querySelector("#transactions");
 const incomeDisplay = document.querySelector("#money-plus");
 const expenseDisplay = document.querySelector("#money-minus");
 const balanceDisplay = document.querySelector("#balance");
+const form = document.querySelector("#form");
+const inputTransactionName = document.querySelector("#text");
+const inputTransactionAmount = document.querySelector("#amount");
 
 const dummyTransactions = [
 	{ id: 1, name: "Bolo de Brigadeiro", amount: -20 },
@@ -22,7 +25,7 @@ const addTransactionIntoDOM = (transaction) => {
 	 <button class="delete-btn">x</button>
 	`;
 
-	transactionsUl.prepend(li);
+	transactionsUl.append(li);
 };
 
 const updateBalanceValues = () => {
@@ -51,8 +54,35 @@ const updateBalanceValues = () => {
 };
 
 const init = () => {
+	transactionsUl.innerHTML = "";
 	dummyTransactions.forEach(addTransactionIntoDOM);
 	updateBalanceValues();
 };
 
 init();
+
+const generateID = () => Math.round(Math.random() * 1000);
+
+form.addEventListener("submit", (event) => {
+	event.preventDefault();
+
+	const transactionName = inputTransactionName.value.trim();
+	const transactionAmount = inputTransactionAmount.value.trim();
+
+	if (transactionName === "" || transactionAmount === "") {
+		alert("Por favor, preencha os campos antes de enviar!");
+		return;
+	}
+
+	const transaction = {
+		id: generateID(),
+		name: transactionName,
+		amount: Number(transactionAmount),
+	};
+
+	dummyTransactions.push(transaction);
+	init();
+
+	inputTransactionName.value = "";
+	inputTransactionAmount.value = "";
+});
